@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Bordered Table</h2>
+  <p>The .table-bordered class adds borders to a table:</p>            
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Purchase Date</th>
+        <th>Purchase Cost</th>
+        <th>Deprecation rate</th>
+		<th>Expried Date</th>
+		<th>Current Value</th>
+		<th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="test">
+    </tbody>
+  </table>
+</div>
+</body>
+<script>
+$(function(){
+console.log("ready");
+
+
+$('#test').html('<tr><td><input type="text" class="form-control" id="date0" value="11/19/2019"></td><td><input type="text" class="form-control" id="cost0" value="100000"></td><td><input type="text" class="form-control" id="rate0"></td><td><input type="text" class="form-control" id="exp_date0"></td><td><input type="text" class="form-control" id="value0"></td><td><button type="button" class="btn btn-default" id="add">+</button></td></tr>');
+
+$('#rate0').change(function(){
+var Totalcost=$('#cost0').val();
+var rate=$('#rate0').val();
+var depreciation_val=Totalcost/rate;
+$('#value0').val(Totalcost-depreciation_val);
+})
+
+var nextdate=$('#date0').val();
+var dates = nextdate.split("/");
+var year =parseInt(dates[2])+1;
+$('#exp_date0').val(dates[0]+"/"+dates[1]+"/"+year);
+
+var i=1;
+$('#add').click(function(){
+	
+	$('#rate'+(i-1)).prop('disabled',true);
+	$('#remove'+(i-1)).prop('disabled',true);
+	
+$('#test').append('<tr><td><input type="text" class="form-control" id="date'+i+'"></td><td><input type="text" class="form-control" id="cost'+i+'"></td><td><input type="text" class="form-control" id="rate'+i+'"></td><td><input type="text" class="form-control" id="exp_date'+i+'"></td><td><input type="text" class="form-control" id="value'+i+'"></td><td><button type="button" class="btn btn-default" id="remove'+i+'">-</button></td></tr>');
+
+
+var pre_date=$('#exp_date'+(i-1)).val();
+var pre_cost=$('#value'+(i-1)).val();
+$('#date'+i).val(pre_date);
+$('#cost'+i).val(pre_cost);
+
+$('#rate'+i).change(function(){
+var Totalcost=$('#cost'+(i-1)).val();
+
+var rate=$('#rate'+(i-1)).val();
+var depreciation_val=Totalcost/rate;
+$('#value'+(i-1)).val(Totalcost-depreciation_val);
+})
+var nextdate=$('#date'+i).val();
+var dates = nextdate.split("/");
+var year =parseInt(dates[2])+1;
+$('#exp_date'+i).val(dates[0]+"/"+dates[1]+"/"+year);
+
+
+$('#remove'+i).click(function(){
+	
+		$(this).parent().parent().remove();
+
+		i--;
+
+		$('#rate'+(i-1)).attr('disabled',false);
+		$('#remove'+(i-1)).attr('disabled',false);
+
+})
+i++;
+})
+
+//End of Add Function
+
+});
+</script>
+</html>
