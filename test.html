@@ -32,29 +32,56 @@
 <script>
 $(function(){
 console.log("ready");
+var check1=0;var check2=0;
 
+$('#test').html('<tr><td><input type="date" class="form-control" id="date0" value="2019-11-19"></td><td><input type="text" class="form-control" id="cost0" value="100000"></td><td><input type="text" class="form-control" id="rate0" min="0"></td><td><input type="date" class="form-control datepicker" id="exp_date0"></td><td><input type="text" class="form-control" id="value0"></td><td><button type="button" class="btn btn-default" id="add">+</button></td></tr>');
 
-$('#test').html('<tr><td><input type="text" class="form-control" id="date0" value="11/19/2019"></td><td><input type="text" class="form-control" id="cost0" value="100000"></td><td><input type="text" class="form-control" id="rate0"></td><td><input type="text" class="form-control" id="exp_date0"></td><td><input type="text" class="form-control" id="value0"></td><td><button type="button" class="btn btn-default" id="add">+</button></td></tr>');
+//$('#add').attr('disabled',true);
 
 $('#rate0').change(function(){
+if($(this).val()<0){
+alert('Enter value more than 2');
+check1=0;
+}else{
 var Totalcost=$('#cost0').val();
 var rate=$('#rate0').val();
-var depreciation_val=Totalcost/rate;
+var depreciation_val=Totalcost*(rate/100);
 $('#value0').val(Totalcost-depreciation_val);
+check1=1;
+}
 })
 
-var nextdate=$('#date0').val();
-var dates = nextdate.split("/");
-var year =parseInt(dates[2])+1;
-$('#exp_date0').val(dates[0]+"/"+dates[1]+"/"+year);
+$('#exp_date0').change(function(){
+var date=$('#exp_date0').val();
+if($(this).val()==""){
+check2=0;
+}else{
+check2=1;
+}
+})
 
+//setInterval(function(){ 
+//if((check1==1)&&(check2==1)){
+	//$('#add').attr('disabled',false);
+	//}else{
+	//$('#add').attr('disabled',true);
+	//}
+//}, 1000);
+
+
+var nextdate=$('#date0').val();
+var dates = nextdate.split("-");
+var year =parseInt(dates[2])+1;
+var min_date=dates[0]+"-"+dates[1]+"-"+dates[2];
+$('#exp_date0').attr('min',min_date);
 var i=1;
 $('#add').click(function(){
+
 	
 	$('#rate'+(i-1)).prop('disabled',true);
 	$('#remove'+(i-1)).prop('disabled',true);
 	
-$('#test').append('<tr><td><input type="text" class="form-control" id="date'+i+'"></td><td><input type="text" class="form-control" id="cost'+i+'"></td><td><input type="text" class="form-control" id="rate'+i+'"></td><td><input type="text" class="form-control" id="exp_date'+i+'"></td><td><input type="text" class="form-control" id="value'+i+'"></td><td><button type="button" class="btn btn-default" id="remove'+i+'">-</button></td></tr>');
+$('#test').append('<tr><td><input type="date" class="form-control" id="date'+i+'"></td><td><input type="text" class="form-control"  id="cost'+i+'"></td><td><input type="text" class="form-control" min="0" id="rate'+i+'"></td><td><input type="date" class="form-control" id="exp_date'+i+'"></td><td><input type="text" class="form-control" id="value'+i+'"></td><td><button type="button" class="btn btn-default" id="remove'+i+'">-</button></td></tr>');
 
 
 var pre_date=$('#exp_date'+(i-1)).val();
@@ -63,16 +90,27 @@ $('#date'+i).val(pre_date);
 $('#cost'+i).val(pre_cost);
 
 $('#rate'+i).change(function(){
+if($(this).val()<2){
+alert('Enter value more than 2');
+}else{
 var Totalcost=$('#cost'+(i-1)).val();
-
 var rate=$('#rate'+(i-1)).val();
-var depreciation_val=Totalcost/rate;
+var depreciation_val=Totalcost*(rate/100);
 $('#value'+(i-1)).val(Totalcost-depreciation_val);
+}
 })
 var nextdate=$('#date'+i).val();
-var dates = nextdate.split("/");
+var dates = nextdate.split("-");
 var year =parseInt(dates[2])+1;
-$('#exp_date'+i).val(dates[0]+"/"+dates[1]+"/"+year);
+var min_date=dates[0]+"-"+dates[1]+"-"+dates[2];
+$('#exp_date'+i).attr('min',min_date);
+
+$('#exp_date'+i).change(function(){
+if($(this).val()==""){
+}else{
+}
+})
+
 
 
 $('#remove'+i).click(function(){
